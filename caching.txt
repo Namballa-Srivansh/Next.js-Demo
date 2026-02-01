@@ -1,0 +1,35 @@
+
+Next.js provides preset cache profiles that cover common caching needs. Each profile balances three factors:
+
+How long users see cached content without checking for updates (client-side)
+How often fresh content is generated on the server
+When old content expires completely
+
+
+
+    'use cache'
+    import { cacheLife } from 'next/cache'
+    
+    export default async function BlogPage() {
+    cacheLife('days') // Blog content updated daily
+    
+    const posts = await getBlogPosts()
+    return <div>{/* render posts */}</div>
+    }
+
+Define reusable cache profiles in your next.config.ts file:
+
+    import type { NextConfig } from 'next'
+    
+    const nextConfig: NextConfig = {
+    cacheComponents: true,
+    cacheLife: {
+        biweekly: {
+        stale: 60 * 60 * 24 * 14, // 14 days
+        revalidate: 60 * 60 * 24, // 1 day
+        expire: 60 * 60 * 24 * 14, // 14 days
+        },
+    },
+    }
+    
+    export default nextConfig
